@@ -4,9 +4,16 @@
   "description": "Sample app used during Node.js training",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon server/app.js --config project/nodemon.json",
+    "check:standard": "standard",
+    "check:standard:fix": "standard --fix"
   },
   "keywords": [],
   "author": "tomasz.zaremba@intive.com",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "standard": "^12.0.1"
+  }
 }
