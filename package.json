@@ -1,0 +1,12 @@
+{
+  "name": "node-js-training",
+  "version": "1.0.0",
+  "description": "Sample app used during Node.js training",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "tomasz.zaremba@intive.com",
+  "license": "ISC"
+}
