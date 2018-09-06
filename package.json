@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:unit": "mocha --recursive test/unit",
     "watch": "nodemon server/app.js --config project/nodemon.json",
     "check:standard": "standard",
     "check:standard:fix": "standard --fix"
@@ -14,9 +14,12 @@
   "author": "tomasz.zaremba@intive.com",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
     "standard": "^12.0.1"
   },
   "dependencies": {
+    "moment": "^2.22.2",
     "yargs": "^12.0.1"
   }
 }

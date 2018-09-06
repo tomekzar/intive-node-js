@@ -1,9 +1,10 @@
 const { argv } = require('yargs')
 
-const { list, create, update, remove } = require('./repository')
+const { list, create, update, remove } = require('./repository/worklogs')
 
 const result = handleCommand()
-console.log(result)
+result.then(console.log)
+  .catch(console.log)
 
 function handleCommand () {
   const { command, id, project, date, hours } = argv
