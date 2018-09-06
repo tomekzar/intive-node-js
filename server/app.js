@@ -1,21 +1,48 @@
-const { argv } = require('yargs')
+const http = require('http')
+const url = require('url')
+const querystring = require('querystring')
 
 const { list, create, update, remove } = require('./repository/worklogs')
 
-const result = handleCommand()
-result.then(console.log)
-  .catch(console.log)
+http.createServer((req, res) => {
+  const { method, headers } = req
+  const requestUrl = url.parse(req.url)
+  const path = requestUrl.pathname 
+  const query = querystring.parse(requestUrl.query)
 
-function handleCommand () {
-  const { command, id, project, date, hours } = argv
-  switch (command) {
-    case 'list':
-      return list()
-    case 'create':
-      return create(project, date, hours)
-    case 'update':
-      return update(id, project, date, hours)
-    case 'remove':
-      return remove(id)   
+  // console.log(path)
+  // console.log(query)
+  // console.log(headers)
+
+  // This is important
+  // console.log(somethingElse)
+
+  if (method === 'GET' && path === '/api/v1/logs') {
+    list().then(logs => {
+      res.writeHead(200, {
+        'Content-Type': 'application/json'
+      })
+      res.write(JSON.stringify(logs))
+      res.end()
+    })
+  } else if (method === 'POST' && path === '/api/v1/logs') {
+    const buffer = []
+    req.on('data', chunk => buffer.push(chunk))
+      .on('end', () => {
+        const body = JSON.parse(Buffer.concat(buffer).toString())
+        const { project, date, hours } = body
+        create(project, date, hours).then(worklog => {
+          res.writeHead(201, {
+            'Content-Type': 'application/json'
+          })
+          res.write(JSON.stringify(worklog))
+          res.end()
+        })
+      })
+  } else {
+    res.writeHead(404, {
+      'Content-Type': 'application/json'
+    })
+    res.end()
   }
-}
+}).listen(9080)
