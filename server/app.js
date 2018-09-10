@@ -1,48 +1,47 @@
-const http = require('http')
-const url = require('url')
-const querystring = require('querystring')
+const hapi = require('hapi')
 
-const { list, create, update, remove } = require('./repository/worklogs')
+const { routes } = require('./routes/routes')
 
-http.createServer((req, res) => {
-  const { method, headers } = req
-  const requestUrl = url.parse(req.url)
-  const path = requestUrl.pathname 
-  const query = querystring.parse(requestUrl.query)
-
-  // console.log(path)
-  // console.log(query)
-  // console.log(headers)
-
-  // This is important
-  // console.log(somethingElse)
-
-  if (method === 'GET' && path === '/api/v1/logs') {
-    list().then(logs => {
-      res.writeHead(200, {
-        'Content-Type': 'application/json'
-      })
-      res.write(JSON.stringify(logs))
-      res.end()
-    })
-  } else if (method === 'POST' && path === '/api/v1/logs') {
-    const buffer = []
-    req.on('data', chunk => buffer.push(chunk))
-      .on('end', () => {
-        const body = JSON.parse(Buffer.concat(buffer).toString())
-        const { project, date, hours } = body
-        create(project, date, hours).then(worklog => {
-          res.writeHead(201, {
-            'Content-Type': 'application/json'
-          })
-          res.write(JSON.stringify(worklog))
-          res.end()
-        })
-      })
-  } else {
-    res.writeHead(404, {
-      'Content-Type': 'application/json'
-    })
-    res.end()
+const options = {
+  ops: {
+      interval: 1000
+  },
+  reporters: {
+    consoleReporter: [
+      {
+        module: 'good-squeeze',
+        name: 'Squeeze',
+        args: [{ log: '*', response: '*' }]
+      }, 
+      {
+        module: 'good-console'
+      }, 
+      'stdout'
+    ]
   }
-}).listen(9080)
+};
+
+const server = hapi.server({
+  port: 9080,
+  host: 'localhost'
+})
+
+const init = async () => {
+  routes.forEach(r => server.route(r))
+
+  await server.register({
+    plugin: require('good'),
+    options
+  })
+
+  await server.start()
+  
+  console.log(`Server running at: ${server.info.uri}`)
+}
+
+process.on('unhandledRejection', err => {
+  console.log(err);
+  process.exit(1);
+});
+
+init()
