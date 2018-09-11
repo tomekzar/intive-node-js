@@ -23,7 +23,7 @@ const putRoute = {
   method: 'PUT',
   path: '/api/v1/logs/{id}',
   handler: async (request, h) => {
-    const id = parseInt(request.params.id)
+    const id = request.params.id
     const { project, date, hours } = request.payload
     const worklog = await update(id, project, date, hours)
     return h.response(worklog)
@@ -34,7 +34,7 @@ const deleteRoute = {
   method: 'DELETE',
   path: '/api/v1/logs/{id}',
   handler: async (request, h) => {
-    const removed = await remove(parseInt(request.params.id))
+    const removed = await remove(request.params.id)
     return h.response(removed)
   }
 }

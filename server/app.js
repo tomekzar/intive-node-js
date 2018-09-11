@@ -1,6 +1,7 @@
 const hapi = require('hapi')
 
 const { routes } = require('./routes/routes')
+const repository = require('./repository/repository')
 
 const options = {
   ops: {
@@ -44,4 +45,16 @@ process.on('unhandledRejection', err => {
   process.exit(1);
 });
 
-init()
+process.on('SIGTERM', function () {
+  repository.close()
+  server.close(function () {
+    process.exit(0);
+  });
+});
+
+repository.connect()
+  .then(() => init())
+  .catch(err => {
+    console.log(`Initialization error: ${err}`)
+    process.exit(1)
+  })

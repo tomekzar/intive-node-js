@@ -26,5 +26,3 @@ const remove = id => repository.remove(id)
 module.exports = {
   list, create, update, remove
 }
-
-// add worklog validator
