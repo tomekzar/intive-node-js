@@ -41,8 +41,8 @@ describe('worklogs', () => {
   const date = moment().format('YYYY-MM-DD')
   const hours = 8
 
-  const worklogs = proxyquire('./../../../../server/repository/worklogs', {
-    './repository': repositoryStub
+  const worklogs = proxyquire('./../../../../server/service/worklogs', {
+    '../repository/repository': repositoryStub
   })
 
   beforeEach(() => {

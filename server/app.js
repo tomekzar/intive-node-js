@@ -30,6 +30,8 @@ const server = hapi.server({
 const init = async () => {
   routes.forEach(r => server.route(r))
 
+  await repository.connect()
+
   await server.register({
     plugin: require('good'),
     options
@@ -37,7 +39,9 @@ const init = async () => {
 
   await server.start()
   
-  console.log(`Server running at: ${server.info.uri}`)
+  server.log(['info'], `Server running at: ${server.info.uri}`)
+
+  return server
 }
 
 process.on('unhandledRejection', err => {
@@ -52,9 +56,4 @@ process.on('SIGTERM', function () {
   });
 });
 
-repository.connect()
-  .then(() => init())
-  .catch(err => {
-    console.log(`Initialization error: ${err}`)
-    process.exit(1)
-  })
+init()

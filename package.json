@@ -16,9 +16,11 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
+    "nock": "^9.6.1",
     "standard": "^12.0.1"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "good": "^8.1.1",
     "good-console": "^7.1.0",
     "good-squeeze": "^5.1.0",

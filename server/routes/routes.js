@@ -1,4 +1,4 @@
-const { list, create, update, remove } = require('./../repository/worklogs')
+const { list, create, update, remove } = require('../service/worklogs')
 
 const getRoute = {
   method: 'GET',
